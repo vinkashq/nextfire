@@ -49,7 +49,7 @@
     "firebase": "^12.6.0",
     "firebase-admin": "^13.6.0",
     "fs-extra": "^11.3.2",
-    "genkit": "^1.22.0",
+    "genkit": "^1.24.0",
     "import-in-the-middle": "^1.15.0",
     "lucide-react": "^0.553.0",
     "markdown-it": "^14.1.0",
