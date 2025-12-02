@@ -10,7 +10,7 @@ const chatFlow = googleChatbot.defineFlow({
     sessionId: z.string().optional(),
     chatId: z.string().optional(),
     promptMessage: z.string(),
-    modelType: z.number().min(1).max(5),
+    promptType: z.number().min(1).max(5),
   }),
   streamSchema: z.string(),
   outputSchema: z.object({
@@ -18,7 +18,7 @@ const chatFlow = googleChatbot.defineFlow({
     message: z.string(),
     model: z.string().optional(),
   }),
-}, async ({ sessionId, chatId, promptMessage, modelType }, { sendChunk }) => {
+}, async ({ sessionId, chatId, promptMessage, promptType }, { sendChunk }) => {
   let session: Session<DocumentData>
   const sessionStore = new GenkitSessionStore()
   const isNewSession = !sessionId
@@ -56,7 +56,7 @@ const chatFlow = googleChatbot.defineFlow({
   // const chatId = await addDoc(ref, {
   //   sessionId,
   //   promptMessage,
-  //   modelType,
+  //   promptType,
   //   model,
   // })
 

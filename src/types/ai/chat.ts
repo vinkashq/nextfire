@@ -5,25 +5,30 @@ export type User = {
   name?: string
   avatarUrl?: string
 }
+export type Chatbot = {
+  id: string
+  promptType: PromptType
+  name: string
+  provider: Provider
+}
 export type Model = {
   id: string
-  type: ModelType
-  key: string
+  promptType: PromptType
   name: string
   provider: Provider
   title: string
 }
-export type AuthorType = User | Model
+export type AuthorType = User | Chatbot
 
 export type MessageType = {
   id?: string
   text: string
-  modelType: ModelType
+  promptType: PromptType
   role: Role
   author: AuthorType
 }
 
-export enum ModelType {
+export enum PromptType {
   Chat = 1,
   Answer = 2,
   Brainstorm = 3,

@@ -11,12 +11,12 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Model, ModelType } from '@/types/ai/chat';
+import { Model, PromptType } from '@/types/ai/chat';
 import { useState, useEffect } from 'react';
 import { addChatbot, updateChatbot } from '@/app/actions/chatbots';
 import { toast } from 'sonner';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from '@/components/ui/select';
-import ModelTypeInput from '@/components/ai/chat/model-type-input';
+import PromptTypeInput from '@/components/ai/chat/prompt-type-input';
 
 interface ChatbotDialogProps {
   open: boolean;
@@ -34,7 +34,7 @@ export function ChatbotDialog({
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState<Partial<Model>>({
     name: '',
-    type: 1,
+    promptType: 1,
     provider: 1,
   });
 
@@ -42,13 +42,13 @@ export function ChatbotDialog({
     if (chatbot) {
       setFormData({
         name: chatbot.name,
-        type: chatbot.type,
+        promptType: chatbot.promptType,
         provider: chatbot.provider,
       });
     } else {
       setFormData({
         name: '',
-        type: 1,
+        promptType: 1,
         provider: 1,
       });
     }
@@ -93,7 +93,7 @@ export function ChatbotDialog({
               <Label htmlFor="type" className="text-right">
                 Type
               </Label>
-              <ModelTypeInput modelType={formData.type} setModelType={(type) => setFormData({ ...formData, type })} />
+              <PromptTypeInput promptType={formData.promptType} setPromptType={(type) => setFormData({ ...formData, promptType: type })} />
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="name" className="text-right">

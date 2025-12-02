@@ -1,10 +1,10 @@
 'use client';
 
 import { ColumnDef } from '@tanstack/react-table';
-import { Model, ModelType } from '@/types/ai/chat';
+import { Model, PromptType } from '@/types/ai/chat';
 import { DataTableActionsMenu } from '@/components/data-table';
 import { DropdownMenuItem } from '@/components/ui/dropdown-menu';
-import { modelTypeIcons } from '@/config/ai';
+import { modelTypeIcons, Provider } from '@/config/ai';
 
 interface ColumnsProps {
   onEdit: (chatbot: Model) => void;
@@ -16,10 +16,11 @@ export const columns = ({
   onDelete,
 }: ColumnsProps): ColumnDef<Model>[] => [
     {
-      accessorKey: 'type',
+      accessorKey: 'promptType',
       header: 'Type',
       cell: ({ row }) => {
-        const type = row.original.type;
+        const type = row.original.promptType;
+        if (!type) return null
         const Icon = modelTypeIcons[type]
         return <Icon className="w-4 h-4" />
       },
@@ -31,6 +32,9 @@ export const columns = ({
     {
       accessorKey: 'provider',
       header: 'Provider',
+      cell: ({ row }) => {
+        return Provider[row.original.provider]
+      },
     },
     {
       id: 'actions',

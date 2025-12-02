@@ -5,18 +5,18 @@ import { streamFlow } from "@genkit-ai/next/client"
 import chatFlow from "@/genkit/flows/chatFlow"
 import ChatPrompt from "@/components/ai/chat/prompt"
 import Message from "@/components/ai/chat/message"
-import { MessageType, ModelType } from "@/types/ai/chat"
+import { MessageType, PromptType } from "@/types/ai/chat"
 import { Provider } from "@/config/ai"
 
 export default function ChatPage() {
   const [messages, setMessages] = useState<MessageType[]>([])
   const [streamedMessage, setStreamedMessage] = useState<MessageType>()
 
-  const send = async (promptMessage: string, modelType: ModelType) => {
+  const send = async (promptMessage: string, promptType: PromptType) => {
     setMessages((prev) => [...prev, {
       id: "1",
       text: promptMessage,
-      modelType,
+      promptType,
       role: 1,
       author: {
         uid: "1",
@@ -27,7 +27,7 @@ export default function ChatPage() {
     setStreamedMessage({
       id: "2",
       text: "",
-      modelType,
+      promptType,
       role: 2,
       author: {
         id: "1",
@@ -41,7 +41,7 @@ export default function ChatPage() {
 
     const response = streamFlow<typeof chatFlow>({
       url: "/api/admin/ai/chat",
-      input: { promptMessage, modelType },
+      input: { promptMessage, promptType },
     })
 
     for await (const chunk of response.stream) {

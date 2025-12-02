@@ -1,11 +1,11 @@
 import Markdown from "@/components/markdown"
 import { MessageType } from "@/types/ai/chat"
 
-export default function Message({ text, modelType, role, author }: MessageType) {
+export default function Message({ text, promptType, role, author }: MessageType) {
   return (
     <div className="message">
       {author.name}
-      <p>{modelType} {role}</p>
+      <p>{promptType} {role}</p>
       <Markdown text={text} />
     </div>
   )

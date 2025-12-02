@@ -1,21 +1,21 @@
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"
 import { BookOpenText, Brain, CircleCheckBig, Lightbulb, MessageCircle } from "lucide-react"
-import { ModelType } from "@/types/ai/chat"
+import { PromptType } from "@/types/ai/chat"
 
-type ModelTypeInputProps = {
-  modelType: ModelType
-  setModelType: (modelType: ModelType) => void
+type PromptTypeInputProps = {
+  promptType: PromptType
+  setPromptType: (promptType: PromptType) => void
 }
 
-export default function ModelTypeInput({ modelType, setModelType }: ModelTypeInputProps) {
+export default function PromptTypeInput({ promptType, setPromptType }: PromptTypeInputProps) {
   return (
     <ToggleGroup
       type="single"
       variant="outline"
       defaultValue="1"
       className="text-xs"
-      value={modelType.toString()}
-      onValueChange={(value) => setModelType(Number(value) as ModelType)}>
+      value={promptType.toString()}
+      onValueChange={(value) => setPromptType(Number(value) as PromptType)}>
       <ToggleGroupItem value="1" size="sm" className="group">
         <MessageCircle />
         <span className="hidden group-aria-checked:block">Chat</span>
