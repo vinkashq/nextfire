@@ -32,10 +32,8 @@ export default function ChatPage() {
       author: {
         id: "1",
         name: "Model",
-        key: "gemini-2.5-flash-lite",
-        type: 1,
+        promptType,
         provider: Provider.Google,
-        title: "gemini 2.5 flash lite",
       },
     })
 
