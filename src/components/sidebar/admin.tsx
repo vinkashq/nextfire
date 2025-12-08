@@ -61,6 +61,14 @@ export default function AdminSidebar({ ...props }: ComponentProps<typeof Sidebar
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton tooltip="AI Models" asChild>
+                  <Link href="/admin/settings/ai-models">
+                    <Bot />
+                    <span>AI Models</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
             </CollapsibleContent>
             <SidebarMenu>
               <SidebarMenuItem>
