@@ -114,6 +114,7 @@
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
     @apply bg-background text-foreground;
   }
@@ -210,7 +211,7 @@
   opacity: 38%;
 }
 
-.gsi-material-button:not(:disabled):active .gsi-material-button-state, 
+.gsi-material-button:not(:disabled):active .gsi-material-button-state,
 .gsi-material-button:not(:disabled):focus .gsi-material-button-state {
   background-color: white;
   opacity: 12%;
@@ -224,4 +225,17 @@
 .gsi-material-button:not(:disabled):hover .gsi-material-button-state {
   background-color: white;
   opacity: 8%;
+}
+
+.chat-message {
+  @apply flex gap-2 px-4 py-2 rounded-md w-fit;
+}
+
+.role-1 {
+  @apply bg-blue-50 text-blue-950 ml-auto;
+}
+
+.role-2,
+.role-undefined {
+  @apply bg-neutral-50 text-neutral-950 mr-auto;
 }
