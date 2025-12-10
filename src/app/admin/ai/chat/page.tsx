@@ -9,6 +9,7 @@ import { MessageType, PromptType } from "@/types/ai/chat"
 import { Provider } from "@/config/ai"
 
 export default function ChatPage() {
+  const [chatId, setChatId] = useState<string>()
   const [messages, setMessages] = useState<MessageType[]>([])
   const [streamedMessage, setStreamedMessage] = useState<MessageType>()
 
@@ -39,7 +40,7 @@ export default function ChatPage() {
 
     const response = streamFlow<typeof chatFlow>({
       url: "/api/admin/ai/chat",
-      input: { promptMessage, promptType },
+      input: { promptMessage, promptType, chatId },
     })
 
     for await (const chunk of response.stream) {
@@ -47,8 +48,10 @@ export default function ChatPage() {
     }
 
     const result = await response.output
-    setStreamedMessage((prev) => ({ ...prev, text: result.message }))
-    setMessages((prev) => [...prev, { ...streamedMessage }])
+    if (!chatId) {
+      setChatId(result.chatId)
+    }
+    setMessages((prev) => [...prev, { ...streamedMessage, text: result.message }])
     setStreamedMessage(undefined)
   }
 

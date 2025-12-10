@@ -2,55 +2,61 @@ import { Session, z } from "genkit";
 import googleChatbot from "@/genkit/google/chatbot";
 import { DocumentData, FieldValue } from "firebase-admin/firestore";
 import GenkitSessionStore from "@/genkit/session/store";
-import { addDoc, collectionRef } from "@/firebase/server/firestore";
+import { addDoc, collectionRef, getDoc } from "@/firebase/server/firestore";
 
 const chatFlow = googleChatbot.defineFlow({
   name: "chatFlow",
   inputSchema: z.object({
-    sessionId: z.string().optional(),
     chatId: z.string().optional(),
     promptMessage: z.string(),
     promptType: z.number().min(1).max(5),
   }),
   streamSchema: z.string(),
   outputSchema: z.object({
-    sessionId: z.string(),
+    chatId: z.string(),
     message: z.string(),
     model: z.string().optional(),
   }),
-}, async ({ sessionId, chatId, promptMessage, promptType }, { context, sendChunk }) => {
+}, async ({ chatId, promptMessage, promptType }, { context, sendChunk }) => {
+  const chatsRef = collectionRef("aiChats")
+  const messagesRef = collectionRef("aiChatMessages")
+
+  const isNewChat = !chatId
+  const userId = context.auth?.userId || null
+  const timestamp = FieldValue.serverTimestamp()
+
   let session: Session<DocumentData>
   const sessionStore = new GenkitSessionStore()
-  const isNewSession = !sessionId
-
-  if (isNewSession) {
+  if (isNewChat) {
     session = googleChatbot.createSession({
       store: sessionStore,
       initialState: {
-        createdAt: FieldValue.serverTimestamp(),
-        loadedAt: FieldValue.serverTimestamp(),
-        updatedAt: FieldValue.serverTimestamp(),
+        userId,
+        createdAt: timestamp,
+        loadedAt: timestamp,
+        updatedAt: timestamp,
       }
     })
-    sessionId = session.id
+    chatId = await addDoc(chatsRef, {
+      userId,
+      sessionId: session.id,
+    })
   } else {
-    session = await googleChatbot.loadSession(sessionId, {
+    const chatDoc = await getDoc("aiChats", chatId)
+    if (!chatDoc.exists) {
+      throw new Error("Chat not found")
+    }
+
+    const chatData = chatDoc.data()
+    session = await googleChatbot.loadSession(chatData.sessionId, {
       store: sessionStore,
     })
     session.updateState({
-      loadedAt: FieldValue.serverTimestamp(),
-      updatedAt: FieldValue.serverTimestamp(),
+      loadedAt: timestamp,
+      updatedAt: timestamp,
     })
   }
 
-  const userId = context.auth?.userId || null
-  const chatsRef = collectionRef("aiChats")
-  const messagesRef = collectionRef("aiChatMessages")
-  if (!chatId) {
-    chatId = await addDoc(chatsRef, {
-      sessionId,
-    })
-  }
   await addDoc(messagesRef, {
     chatId,
     text: promptMessage,
@@ -82,7 +88,6 @@ const chatFlow = googleChatbot.defineFlow({
 
   return {
     chatId,
-    sessionId,
     message: text,
     promptType,
   }
