@@ -43,6 +43,21 @@ const chatFlow = googleChatbot.defineFlow({
     })
   }
 
+  const userId = context.auth?.userId || null
+  const chatsRef = collectionRef("aiChats")
+  const messagesRef = collectionRef("aiChatMessages")
+  if (!chatId) {
+    chatId = await addDoc(chatsRef, {
+      sessionId,
+    })
+  }
+  await addDoc(messagesRef, {
+    chatId,
+    text: promptMessage,
+    role: "user",
+    userId,
+  })
+
   const chat = session.chat()
 
   const { stream, response } = chat.sendStream(promptMessage)
@@ -50,29 +65,19 @@ const chatFlow = googleChatbot.defineFlow({
     sendChunk(chunk.text)
   }
 
-  if (!chatId) {
-    const ref = collectionRef("aiChats")
-    chatId = await addDoc(ref, {
-      sessionId,
-    })
-  }
-
-  const ref = collectionRef("aiChatMessages")
-
-  const userId = context.auth?.userId
-  await addDoc(ref, {
-    chatId,
-    text: promptMessage,
-    role: "user",
-    userId,
-  })
-
   const { text, model } = await response
+  const chatbots = await collectionRef("chatbots").offset(0).limit(1).get()
+  const chatbotId = chatbots.docs[0].id
 
-  await addDoc(ref, {
+  const models = await collectionRef("aiModels").offset(0).limit(1).get()
+  const modelId = models.docs[0].id
+
+  await addDoc(messagesRef, {
     chatId,
     text,
     role: "model",
+    chatbotId,
+    modelId,
   })
 
   return {
