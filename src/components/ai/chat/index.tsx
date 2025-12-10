@@ -17,7 +17,7 @@ interface AIChatProps {
 }
 
 export default function AIChat({ id }: AIChatProps) {
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(!!id)
   const [messages, setMessages] = useState<MessageType[]>([])
   const [streamedMessage, setStreamedMessage] = useState<MessageType>()
   const [streaming, setStreaming] = useState(false)
