@@ -12,6 +12,9 @@ export default function ChatPage() {
   const [chatId, setChatId] = useState<string>()
   const [messages, setMessages] = useState<MessageType[]>([])
   const [streamedMessage, setStreamedMessage] = useState<MessageType>()
+  const [streaming, setStreaming] = useState(false)
+  const hasMessages = messages.length > 0
+  const waitingForStream = streaming && streamedMessage?.text === ""
 
   const send = async (promptMessage: string, promptType: PromptType) => {
     setMessages((prev) => [...prev, {
@@ -38,6 +41,7 @@ export default function ChatPage() {
       },
     })
 
+    setStreaming(true)
     const response = streamFlow<typeof chatFlow>({
       url: "/api/admin/ai/chat",
       input: { promptMessage, promptType, chatId },
@@ -47,6 +51,7 @@ export default function ChatPage() {
       setStreamedMessage((prev) => ({ ...prev, text: prev.text + chunk }))
     }
 
+    setStreaming(false)
     const result = await response.output
     if (!chatId) {
       setChatId(result.chatId)
@@ -60,8 +65,17 @@ export default function ChatPage() {
       {messages.map((message, index) => (
         <Message key={index} {...message} />
       ))}
+      {waitingForStream && (
+        <span className="relative flex size-3">
+          <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary"></span>
+          <span className="relative inline-flex size-3 rounded-full bg-primary"></span>
+        </span>
+      )}
       {streamedMessage && (
         <Message {...streamedMessage} />
+      )}
+      {hasMessages && (
+        <div className="grow"></div>
       )}
       <ChatPrompt onSend={send} />
     </div>
