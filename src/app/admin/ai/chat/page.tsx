@@ -7,6 +7,7 @@ import ChatPrompt from "@/components/ai/chat/prompt"
 import Message from "@/components/ai/chat/message"
 import { MessageType, PromptType } from "@/types/ai/chat"
 import { Provider } from "@/config/ai"
+import ThinkingAnimation from "@/components/ai/chat/thinking-animation"
 
 export default function ChatPage() {
   const [chatId, setChatId] = useState<string>()
@@ -14,11 +15,10 @@ export default function ChatPage() {
   const [streamedMessage, setStreamedMessage] = useState<MessageType>()
   const [streaming, setStreaming] = useState(false)
   const hasMessages = messages.length > 0
-  const waitingForStream = streaming && streamedMessage?.text === ""
+  const thinking = streaming && streamedMessage?.text === ""
 
   const send = async (promptMessage: string, promptType: PromptType) => {
     setMessages((prev) => [...prev, {
-      id: "1",
       text: promptMessage,
       promptType,
       role: 1,
@@ -29,7 +29,6 @@ export default function ChatPage() {
     }])
 
     setStreamedMessage({
-      id: "2",
       text: "",
       promptType,
       role: 2,
@@ -65,18 +64,9 @@ export default function ChatPage() {
       {messages.map((message, index) => (
         <Message key={index} {...message} />
       ))}
-      {waitingForStream && (
-        <span className="relative flex size-3">
-          <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary"></span>
-          <span className="relative inline-flex size-3 rounded-full bg-primary"></span>
-        </span>
-      )}
-      {streamedMessage && (
-        <Message {...streamedMessage} />
-      )}
-      {hasMessages && (
-        <div className="grow"></div>
-      )}
+      {thinking && <ThinkingAnimation />}
+      {streamedMessage && <Message {...streamedMessage} />}
+      {hasMessages && <div className="grow"></div>}
       <ChatPrompt onSend={send} />
     </div>
   )
