@@ -7,21 +7,21 @@ import { addDoc, collectionRef, getDoc } from "@/firebase/server/firestore";
 const chatFlow = googleChatbot.defineFlow({
   name: "chatFlow",
   inputSchema: z.object({
-    chatId: z.string().optional(),
+    id: z.string().optional(),
     promptMessage: z.string(),
     promptType: z.number().min(1).max(5),
   }),
   streamSchema: z.string(),
   outputSchema: z.object({
-    chatId: z.string(),
+    id: z.string(),
     message: z.string(),
     model: z.string().optional(),
   }),
-}, async ({ chatId, promptMessage, promptType }, { context, sendChunk }) => {
+}, async ({ id, promptMessage, promptType }, { context, sendChunk }) => {
   const chatsRef = collectionRef("aiChats")
   const messagesRef = collectionRef("aiChatMessages")
 
-  const isNewChat = !chatId
+  const isNewChat = !id
   const userId = context.auth?.userId || null
   const timestamp = FieldValue.serverTimestamp()
 
@@ -37,12 +37,12 @@ const chatFlow = googleChatbot.defineFlow({
         updatedAt: timestamp,
       }
     })
-    chatId = await addDoc(chatsRef, {
+    id = await addDoc(chatsRef, {
       userId,
       sessionId: session.id,
     })
   } else {
-    const chatDoc = await getDoc("aiChats", chatId)
+    const chatDoc = await getDoc("aiChats", id)
     if (!chatDoc.exists) {
       throw new Error("Chat not found")
     }
@@ -58,7 +58,7 @@ const chatFlow = googleChatbot.defineFlow({
   }
 
   await addDoc(messagesRef, {
-    chatId,
+    chatId: id,
     text: promptMessage,
     role: "user",
     userId,
@@ -79,7 +79,7 @@ const chatFlow = googleChatbot.defineFlow({
   const modelId = models.docs[0].id
 
   await addDoc(messagesRef, {
-    chatId,
+    chatId: id,
     text,
     role: "model",
     chatbotId,
@@ -87,7 +87,7 @@ const chatFlow = googleChatbot.defineFlow({
   })
 
   return {
-    chatId,
+    id,
     message: text,
     promptType,
   }
