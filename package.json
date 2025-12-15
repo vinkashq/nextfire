@@ -22,7 +22,7 @@
     "pull:upstream": "git checkout nextfire && git pull upstream tests-passed && git push origin nextfire && git checkout main && git merge nextfire"
   },
   "dependencies": {
-    "@genkit-ai/google-genai": "^1.22.0",
+    "@genkit-ai/google-genai": "^1.24.0",
     "@genkit-ai/next": "^1.22.0",
     "@hookform/resolvers": "^5.2.2",
     "@nanostores/react": "^1.0.0",
