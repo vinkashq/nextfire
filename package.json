@@ -48,7 +48,7 @@
     "express": "^4.22.0",
     "firebase": "^12.6.0",
     "firebase-admin": "^13.6.0",
-    "fs-extra": "^11.3.2",
+    "fs-extra": "^11.3.3",
     "genkit": "^1.24.0",
     "import-in-the-middle": "^2.0.0",
     "lucide-react": "^0.553.0",
