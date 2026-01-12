@@ -64,7 +64,6 @@ export default function CrudTable<TData, TValue>({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
   })
 
   const LoadMoreButton = () => {
