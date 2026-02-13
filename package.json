@@ -52,7 +52,7 @@
     "genkit": "^1.28.0",
     "import-in-the-middle": "^2.0.0",
     "lucide-react": "^0.553.0",
-    "markdown-it": "^14.1.0",
+    "markdown-it": "^14.1.1",
     "nanostores": "^1.1.0",
     "next": "^16.1.5",
     "next-themes": "^0.4.6",
