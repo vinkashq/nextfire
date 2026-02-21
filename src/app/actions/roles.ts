@@ -4,6 +4,18 @@ import { firestore } from '@/firebase/server';
 import { Role } from '@/types';
 import { revalidatePath } from 'next/cache';
 import { FieldValue } from 'firebase-admin/firestore';
+import { z } from 'zod';
+
+const RoleSchema = z.object({
+  name: z.string()
+    .trim()
+    .min(1, 'Role name is required')
+    .max(100, 'Role name must be 100 characters or less')
+    .refine(name => !name.includes('/'), 'Role name cannot contain forward slashes')
+    .refine(name => name !== '.' && name !== '..', 'Role name cannot be "." or ".."')
+    .refine(name => !name.startsWith('__'), 'Role name cannot start with "__"'),
+  description: z.string().max(500, 'Description must be 500 characters or less').optional(),
+});
 
 export async function listRoles(): Promise<Role[]> {
   try {
@@ -52,7 +64,8 @@ export async function getRole(id: string): Promise<Role | null> {
 
 export async function createRole(role: Omit<Role, 'id' | 'createdAt' | 'updatedAt'>): Promise<Role | null> {
   try {
-    const docId = role.name.toLowerCase();
+    const validated = RoleSchema.parse(role);
+    const docId = validated.name.toLowerCase();
     const docRef = firestore.collection('roles').doc(docId);
     
     // Check if role already exists
@@ -62,8 +75,8 @@ export async function createRole(role: Omit<Role, 'id' | 'createdAt' | 'updatedA
     }
     
     const newRole = {
-      name: role.name,
-      description: role.description || '',
+      name: validated.name,
+      description: validated.description || '',
       createdAt: FieldValue.serverTimestamp(),
       updatedAt: FieldValue.serverTimestamp(),
     };
@@ -89,8 +102,9 @@ export async function createRole(role: Omit<Role, 'id' | 'createdAt' | 'updatedA
 
 export async function updateRole(id: string, role: Partial<Omit<Role, 'id' | 'createdAt' | 'updatedAt'>>): Promise<Role | null> {
   try {
+    const validated = RoleSchema.partial().parse(role);
     // Prevent name changes since document ID is based on lowercased name
-    if (role.name !== undefined && role.name.toLowerCase() !== id.toLowerCase()) {
+    if (validated.name !== undefined && validated.name.toLowerCase() !== id.toLowerCase()) {
       throw new Error('Cannot change role name. The document ID is based on the role name.');
     }
     
@@ -98,7 +112,7 @@ export async function updateRole(id: string, role: Partial<Omit<Role, 'id' | 'cr
       updatedAt: FieldValue.serverTimestamp(),
     };
     
-    if (role.description !== undefined) updateData.description = role.description;
+    if (validated.description !== undefined) updateData.description = validated.description;
     
     await firestore.collection('roles').doc(id).update(updateData);
     revalidatePath('/admin/roles');
