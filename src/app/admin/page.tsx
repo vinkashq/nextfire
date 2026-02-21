@@ -8,6 +8,13 @@ import { Database, Loader2 } from "lucide-react"
 import { postRequest } from "@/lib/utils"
 import { useAppCheck } from "@/context/firebase/AppCheckContext"
 
+interface SeedResult {
+  type: string
+  action: string
+  item: string
+  reason?: string
+}
+
 export default function Page() {
   const [loading, setLoading] = useState(false)
   const { getAppCheckToken } = useAppCheck()
@@ -18,7 +25,11 @@ export default function Page() {
       const appCheckToken = await getAppCheckToken()
       const response = await postRequest("/api/admin/seed", appCheckToken)
 
-      const data = await response.json()
+      const data = await response.json() as {
+        summary: { created: number; skipped: number }
+        results: SeedResult[]
+        error?: string
+      }
 
       if (!response.ok) {
         throw new Error(data.error || "Failed to run seeds")
@@ -28,7 +39,7 @@ export default function Page() {
       const message = `Seeding completed: ${summary.created} created, ${summary.skipped} skipped`
       
       toast.success(message, {
-        description: results.map((r: any) => 
+        description: results.map((r: SeedResult) =>
           `${r.type}: ${r.item} (${r.action}${r.reason ? ` - ${r.reason}` : ""})`
         ).join(", "),
       })
