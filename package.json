@@ -47,7 +47,7 @@
     "data-urls": "^6.0.0",
     "express": "^4.22.0",
     "firebase": "^12.8.0",
-    "firebase-admin": "^13.6.0",
+    "firebase-admin": "^13.6.1",
     "fs-extra": "^11.3.3",
     "genkit": "^1.28.0",
     "import-in-the-middle": "^3.0.0",
