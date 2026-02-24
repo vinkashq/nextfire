@@ -59,7 +59,7 @@
     "node-vibrant": "^4.0.3",
     "postcss": "^8.5.6",
     "react": "^19.2.4",
-    "react-dom": "^19.2.3",
+    "react-dom": "^19.2.4",
     "react-hook-form": "^7.71.1",
     "react-resizable-panels": "^4.6.2",
     "react-textarea-autosize": "^8.5.9",
