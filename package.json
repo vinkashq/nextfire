@@ -51,7 +51,7 @@
     "fs-extra": "^11.3.3",
     "genkit": "^1.28.0",
     "import-in-the-middle": "^3.0.0",
-    "lucide-react": "^0.564.0",
+    "lucide-react": "^0.575.0",
     "markdown-it": "^14.1.1",
     "nanostores": "^1.1.0",
     "next": "^16.1.5",
