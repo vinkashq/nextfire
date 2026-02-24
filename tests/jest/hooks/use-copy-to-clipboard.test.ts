@@ -1,8 +1,8 @@
-import { renderHook, act } from '@testing-library/react'
+import { renderHook, act, waitFor } from '@testing-library/react'
 import { useCopyToClipboard } from '@/hooks/use-copy-to-clipboard'
 
 describe('useCopyToClipboard', () => {
-  const originalClipboard = { ...global.navigator.clipboard }
+  const originalClipboard = global.navigator.clipboard
 
   beforeEach(() => {
     jest.useFakeTimers()
@@ -12,6 +12,7 @@ describe('useCopyToClipboard', () => {
         writeText: jest.fn().mockImplementation(() => Promise.resolve()),
       },
       configurable: true,
+      writable: true
     })
   })
 
@@ -22,6 +23,7 @@ describe('useCopyToClipboard', () => {
     Object.defineProperty(navigator, 'clipboard', {
       value: originalClipboard,
       configurable: true,
+      writable: true
     })
   })
 
@@ -35,23 +37,23 @@ describe('useCopyToClipboard', () => {
     const onCopy = jest.fn()
     const { result } = renderHook(() => useCopyToClipboard({ onCopy }))
 
-    await act(async () => {
+    act(() => {
       result.current.copyToClipboard('test value')
     })
 
+    await waitFor(() => expect(result.current.isCopied).toBe(true))
     expect(navigator.clipboard.writeText).toHaveBeenCalledWith('test value')
-    expect(result.current.isCopied).toBe(true)
     expect(onCopy).toHaveBeenCalled()
   })
 
   it('should reset isCopied after default timeout', async () => {
     const { result } = renderHook(() => useCopyToClipboard())
 
-    await act(async () => {
+    act(() => {
       result.current.copyToClipboard('test value')
     })
 
-    expect(result.current.isCopied).toBe(true)
+    await waitFor(() => expect(result.current.isCopied).toBe(true))
 
     act(() => {
       jest.advanceTimersByTime(2000)
@@ -63,11 +65,11 @@ describe('useCopyToClipboard', () => {
   it('should reset isCopied after custom timeout', async () => {
     const { result } = renderHook(() => useCopyToClipboard({ timeout: 500 }))
 
-    await act(async () => {
+    act(() => {
       result.current.copyToClipboard('test value')
     })
 
-    expect(result.current.isCopied).toBe(true)
+    await waitFor(() => expect(result.current.isCopied).toBe(true))
 
     act(() => {
       jest.advanceTimersByTime(500)
@@ -79,11 +81,11 @@ describe('useCopyToClipboard', () => {
   it('should not reset isCopied if timeout is 0', async () => {
     const { result } = renderHook(() => useCopyToClipboard({ timeout: 0 }))
 
-    await act(async () => {
+    act(() => {
       result.current.copyToClipboard('test value')
     })
 
-    expect(result.current.isCopied).toBe(true)
+    await waitFor(() => expect(result.current.isCopied).toBe(true))
 
     act(() => {
       jest.advanceTimersByTime(10000)
@@ -95,7 +97,7 @@ describe('useCopyToClipboard', () => {
   it('should not copy if value is empty', async () => {
     const { result } = renderHook(() => useCopyToClipboard())
 
-    await act(async () => {
+    act(() => {
       result.current.copyToClipboard('')
     })
 
@@ -107,10 +109,11 @@ describe('useCopyToClipboard', () => {
     Object.defineProperty(navigator, 'clipboard', {
       value: undefined,
       configurable: true,
+      writable: true
     })
     const { result } = renderHook(() => useCopyToClipboard())
 
-    await act(async () => {
+    act(() => {
       result.current.copyToClipboard('test')
     })
 
@@ -125,12 +128,14 @@ describe('useCopyToClipboard', () => {
 
     const { result } = renderHook(() => useCopyToClipboard())
 
-    await act(async () => {
+    act(() => {
       result.current.copyToClipboard('test')
     })
 
+    // Wait for the failure to be logged
+    await waitFor(() => expect(consoleSpy).toHaveBeenCalledWith(new Error('Failed to copy')))
     expect(result.current.isCopied).toBe(false)
-    expect(consoleSpy).toHaveBeenCalledWith(new Error('Failed to copy'))
+
     consoleSpy.mockRestore()
   })
 })
