@@ -23,7 +23,6 @@ interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
   nextPageToken?: string
-  // eslint-disable-next-line no-unused-vars
   onLoadMore?: (token?: string) => void
 }
 
