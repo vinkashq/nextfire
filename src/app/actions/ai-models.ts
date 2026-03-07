@@ -10,10 +10,15 @@ const collectionRef = firestore.collection(COLLECTION_NAME);
 
 export const listAiModels = async () => {
   const querySnapshot = await collectionRef.get();
-  const models = querySnapshot.docs.map((doc) => ({
-    id: doc.id,
-    ...doc.data(),
-  })) as Model[];
+  const models = querySnapshot.docs.map((doc) => {
+    const data = doc.data();
+    return {
+      ...data,
+      id: doc.id,
+      createdAt: data.createdAt?.toDate?.()?.getTime() || data.createdAt,
+      updatedAt: data.updatedAt?.toDate?.()?.getTime() || data.updatedAt,
+    } as Model;
+  });
   return models;
 }
 

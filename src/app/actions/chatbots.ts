@@ -10,10 +10,15 @@ const COLLECTION_NAME = 'chatbots';
 export async function listChatbots(): Promise<Chatbot[]> {
   try {
     const snapshot = await firestore.collection(COLLECTION_NAME).get();
-    return snapshot.docs.map((doc) => ({
-      id: doc.id,
-      ...doc.data(),
-    })) as Chatbot[];
+    return snapshot.docs.map((doc) => {
+      const data = doc.data();
+      return {
+        ...data,
+        id: doc.id,
+        createdAt: data.createdAt?.toDate?.()?.getTime() || data.createdAt,
+        updatedAt: data.updatedAt?.toDate?.()?.getTime() || data.updatedAt,
+      } as Chatbot;
+    });
   } catch (error) {
     console.error('Error listing chatbots:', error);
     return [];
