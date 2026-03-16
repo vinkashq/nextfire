@@ -15,8 +15,8 @@ importers:
         specifier: ^1.29.0
         version: 1.29.0(genkit@1.29.0(@google-cloud/firestore@7.11.6)(firebase-admin@13.6.1)(firebase@12.9.0))
       '@genkit-ai/next':
-        specifier: ^1.29.0
-        version: 1.29.0(genkit@1.29.0(@google-cloud/firestore@7.11.6)(firebase-admin@13.6.1)(firebase@12.9.0))(next@16.1.6(@babel/core@7.29.0)(@opentelemetry/api@1.9.0)(@playwright/test@1.57.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(zod@4.3.6)
+        specifier: ^1.30.1
+        version: 1.30.1(genkit@1.29.0(@google-cloud/firestore@7.11.6)(firebase-admin@13.6.1)(firebase@12.9.0))(next@16.1.6(@babel/core@7.29.0)(@opentelemetry/api@1.9.0)(@playwright/test@1.57.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(zod@4.3.6)
       '@hookform/resolvers':
         specifier: ^5.2.2
         version: 5.2.2(react-hook-form@7.71.1(react@19.2.4))
@@ -959,10 +959,10 @@ packages:
     peerDependencies:
       genkit: ^1.29.0
 
-  '@genkit-ai/next@1.29.0':
-    resolution: {integrity: sha512-rG4ww/F36yF0Fk0JZzrsyfGN/58itSNmVUfEI2xmiwBSPPZB9BHgRsh4fQtHkC8v5KfX8XCwtjpHXGVkEd14Mw==}
+  '@genkit-ai/next@1.30.1':
+    resolution: {integrity: sha512-vzfaEGc8hhNwJ2c0HaY6pHYKOcpcG6vvIG247c7Zd4uo7xGaQ2wyr0jjS4fjCZXbnOsBxqh/W/k1oqXh65tleA==}
     peerDependencies:
-      genkit: 1.29.0
+      genkit: 1.30.1
       next: ^15.0.0 || ^16.0.0
       zod: ^3.24.1
 
@@ -7677,7 +7677,7 @@ snapshots:
       - encoding
       - supports-color
 
-  '@genkit-ai/next@1.29.0(genkit@1.29.0(@google-cloud/firestore@7.11.6)(firebase-admin@13.6.1)(firebase@12.9.0))(next@16.1.6(@babel/core@7.29.0)(@opentelemetry/api@1.9.0)(@playwright/test@1.57.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(zod@4.3.6)':
+  '@genkit-ai/next@1.30.1(genkit@1.29.0(@google-cloud/firestore@7.11.6)(firebase-admin@13.6.1)(firebase@12.9.0))(next@16.1.6(@babel/core@7.29.0)(@opentelemetry/api@1.9.0)(@playwright/test@1.57.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(zod@4.3.6)':
     dependencies:
       genkit: 1.29.0(@google-cloud/firestore@7.11.6)(firebase-admin@13.6.1)(firebase@12.9.0)
       next: 16.1.6(@babel/core@7.29.0)(@opentelemetry/api@1.9.0)(@playwright/test@1.57.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
