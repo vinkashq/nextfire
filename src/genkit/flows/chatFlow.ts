@@ -72,10 +72,11 @@ const chatFlow = googleChatbot.defineFlow({
   }
 
   const { text, model } = await response
-  const chatbots = await collectionRef("chatbots").offset(0).limit(1).get()
+  const [chatbots, models] = await Promise.all([
+    collectionRef("chatbots").offset(0).limit(1).get(),
+    collectionRef("aiModels").offset(0).limit(1).get(),
+  ])
   const chatbotId = chatbots.docs[0].id
-
-  const models = await collectionRef("aiModels").offset(0).limit(1).get()
   const modelId = models.docs[0].id
 
   await addDoc(messagesRef, {
