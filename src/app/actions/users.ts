@@ -80,24 +80,21 @@ export async function getUserRoles(uid: string): Promise<Role[]> {
       return [];
     }
     
-    const roles: Role[] = [];
-    const rolePromises = roleIds.map(async (roleId) => {
-      const roleDoc = await firestore.collection('roles').doc(roleId).get();
-      if (roleDoc.exists) {
-        const roleData = roleDoc.data();
-        roles.push({
-          id: roleDoc.id,
-          name: roleData?.name || '',
-          description: roleData?.description || '',
-          createdAt: roleData?.createdAt?.toDate(),
-          updatedAt: roleData?.updatedAt?.toDate(),
-        });
-      }
-    });
+    const roleRefs = roleIds.map((roleId) => firestore.collection('roles').doc(roleId));
+    const roleDocs = await firestore.getAll(...roleRefs);
     
-    await Promise.all(rolePromises);
-    
-    return roles;
+    return roleDocs
+      .filter((doc) => doc.exists)
+      .map((doc) => {
+        const data = doc.data();
+        return {
+          id: doc.id,
+          name: data?.name || '',
+          description: data?.description || '',
+          createdAt: data?.createdAt?.toDate(),
+          updatedAt: data?.updatedAt?.toDate(),
+        };
+      });
   } catch (error) {
     console.error('Error fetching user roles:', error);
     return [];
