@@ -79,13 +79,28 @@ const generateImage = googleImagen.defineTool(
       bodyTextColor: string;
     }
 
-    const getColorSwatch = (color: any): ColorSwatch | undefined => {
-      if (!color) return undefined
-      return {
-        hex: color.hex,
-        titleTextColor: color.titleTextColor,
-        bodyTextColor: color.bodyTextColor,
+    const getColorSwatch = (color: unknown): ColorSwatch | undefined => {
+      if (
+        color &&
+        typeof color === 'object' &&
+        'hex' in color &&
+        'titleTextColor' in color &&
+        'bodyTextColor' in color
+      ) {
+        const swatch = color as Record<string, unknown>
+        if (
+          typeof swatch.hex === 'string' &&
+          typeof swatch.titleTextColor === 'string' &&
+          typeof swatch.bodyTextColor === 'string'
+        ) {
+          return {
+            hex: swatch.hex,
+            titleTextColor: swatch.titleTextColor,
+            bodyTextColor: swatch.bodyTextColor,
+          }
+        }
       }
+      return undefined
     }
 
     // Extract colors using node-vibrant
