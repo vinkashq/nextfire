@@ -28,7 +28,7 @@ const publicPaths = [
   '/app-ads.txt'
 ]
 
-export default async function middleware(request: NextRequest) {
+export default async function proxy(request: NextRequest) {
   const pathname = request.nextUrl.pathname
   const headers = request.headers
   let userId: string
@@ -149,8 +149,4 @@ export default async function middleware(request: NextRequest) {
   }
 
   return response
-}
-
-export const config = {
-  runtime: 'nodejs'
 }
