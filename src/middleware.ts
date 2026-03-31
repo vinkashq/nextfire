@@ -23,6 +23,11 @@ const pathsToCheckRevokedIdToken = [
   '/api/token'
 ]
 
+const publicPaths = [
+  '/ads.txt',
+  '/app-ads.txt'
+]
+
 export default async function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname
   const headers = request.headers
@@ -41,6 +46,10 @@ export default async function middleware(request: NextRequest) {
   const wantsHTML =
     !wantsJSON &&
     (accept.includes('text/html') || accept === '*/*' || accept === '')
+
+  if (publicPaths.some(path => pathname.startsWith(path))) {
+    return NextResponse.next()
+  }
 
   const cookie = request.cookies.get(sessionCookie)
   if (cookie) {
