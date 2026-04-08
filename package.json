@@ -51,6 +51,7 @@
     "fs-extra": "^11.3.3",
     "genkit": "^1.31.0",
     "import-in-the-middle": "^3.0.0",
+    "isomorphic-dompurify": "^2.22.0",
     "lucide-react": "^0.575.0",
     "markdown-it": "^14.1.1",
     "nanostores": "^1.1.0",
